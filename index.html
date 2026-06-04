@@ -44,6 +44,38 @@
   gtag('js', new Date());
 
   gtag('config', 'AW-18198097775');
+
+  // === Google Ads — отслеживание конверсий типа "Контакт" (клик) ===
+  // Официальная функция из Google Ads. Можно вызывать на ссылке так:
+  // <a href="tel:..." onclick="return gtag_report_conversion('tel:+77762776163');">
+  function gtag_report_conversion(url) {
+    var callback = function () {
+      if (typeof(url) != 'undefined') {
+        window.location = url;
+      }
+    };
+    gtag('event', 'conversion', {
+      'send_to': 'AW-18198097775/a2GnCMCAjLccEO_ew-VD',
+      'value': 1.0,
+      'currency': 'USD',
+      'event_callback': callback
+    });
+    return false;
+  }
+
+  // Упрощённый вызов без редиректа — для ссылок, которые открываются сами
+  // (tel:, WhatsApp в новой вкладке) и для отправки формы.
+  function dzTrackConversion() {
+    if (typeof gtag === 'function') {
+      gtag('event', 'conversion', {
+        'send_to': 'AW-18198097775/a2GnCMCAjLccEO_ew-VD',
+        'value': 1.0,
+        'currency': 'USD'
+      });
+    }
+  }
+  window.gtag_report_conversion = gtag_report_conversion;
+  window.dzTrackConversion = dzTrackConversion;
 </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
@@ -357,7 +389,7 @@ footer{background:#0A0A0A;color:#fff;padding:60px 0 22px}
         <button data-lang="ru" class="active">RU</button>
         <button data-lang="kz">KZ</button>
       </div>
-      <a href="tel:+77762776163" class="phone-btn">
+      <a href="tel:+77762776163" class="phone-btn" data-conv="call">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6A19.79 19.79 0 012.12 4.18 2 2 0 014.11 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"/></svg>
         <span>+7&nbsp;776&nbsp;277&nbsp;6163</span>
       </a>
@@ -372,11 +404,11 @@ footer{background:#0A0A0A;color:#fff;padding:60px 0 22px}
   <div class="hero-bg"><img src="/images/hero-bg.jpg" alt="" onerror="this.style.display='none'"></div>
   <div class="wrap hero-inner">
     <div class="hero-cta">
-      <a href="https://wa.me/77762776163?text=Здравствуйте%2C%20хочу%20получить%20бесплатную%20консультацию%20по%20дезинфекции" target="_blank" rel="noopener" class="btn btn-dark">
+      <a href="https://wa.me/77762776163?text=Здравствуйте%2C%20хочу%20получить%20бесплатную%20консультацию%20по%20дезинфекции" target="_blank" rel="noopener" class="btn btn-dark" data-conv="whatsapp">
         <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><path d="M17.5 14.38c-.28-.14-1.66-.82-1.92-.91-.26-.1-.44-.14-.63.14-.19.28-.72.91-.88 1.09-.16.19-.33.21-.6.07-.28-.14-1.18-.43-2.24-1.38-.83-.74-1.39-1.65-1.55-1.93-.16-.28-.02-.43.12-.56.12-.12.28-.33.42-.49.14-.16.19-.28.28-.46.09-.19.05-.35-.02-.49-.07-.14-.63-1.51-.86-2.07-.23-.55-.46-.47-.63-.47l-.54-.01c-.18 0-.48.07-.74.35-.26.28-.97.95-.97 2.31 0 1.36 1 2.67 1.14 2.85.14.19 1.96 3 4.75 4.21.66.29 1.18.46 1.58.59.67.21 1.27.18 1.75.11.53-.08 1.66-.68 1.89-1.33.23-.65.23-1.2.16-1.33-.06-.12-.25-.2-.53-.34zM12 2.04C6.5 2.04 2.04 6.5 2.04 12c0 1.76.46 3.45 1.33 4.95L2 22l5.22-1.36c1.45.79 3.08 1.21 4.78 1.21 5.5 0 9.96-4.46 9.96-9.96 0-2.66-1.03-5.17-2.92-7.05C17.17 3.07 14.66 2.04 12 2.04"/></svg>
         <span data-i18n="hero.btnWa">Бесплатная консультация</span>
       </a>
-      <a href="tel:+77762776163" class="btn btn-light">
+      <a href="tel:+77762776163" class="btn btn-light" data-conv="call">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" width="18" height="18" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6A19.79 19.79 0 012.12 4.18 2 2 0 014.11 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"/></svg>
         <span data-i18n="hero.btnCall">Позвонить</span>
       </a>
@@ -401,25 +433,25 @@ footer{background:#0A0A0A;color:#fff;padding:60px 0 22px}
       <p class="lead" data-i18n="svc.lead">19 направлений работы — от домашних насекомых до грызунов и опасных змей. С договором, гарантией и сертифицированными препаратами.</p>
     </div>
     <div class="svc-grid">
-      <a class="svc" href="https://wa.me/77762776163?text=Здравствуйте%21%20Хочу%20заказать%20услугу%20%22Уничтожение%20клопов%22." target="_blank" rel="noopener"><div class="svc-img"><img src="/images/svc-bedbug.jpg" alt="Клопы" loading="lazy"></div><div class="svc-name" data-i18n="svc.1.pre">Уничтожение<span class="strong" data-i18n="svc.1.main">клопов</span></div></a>
-      <a class="svc" href="https://wa.me/77762776163?text=Здравствуйте%21%20Хочу%20заказать%20услугу%20%22Уничтожение%20тараканов%22." target="_blank" rel="noopener"><div class="svc-img"><img src="/images/svc-cockroach.jpg" alt="Тараканы" loading="lazy"></div><div class="svc-name" data-i18n="svc.2.pre">Уничтожение<span class="strong" data-i18n="svc.2.main">тараканов</span></div></a>
-      <a class="svc" href="https://wa.me/77762776163?text=Здравствуйте%21%20Хочу%20заказать%20услугу%20%22Устранение%20запаха%22." target="_blank" rel="noopener"><div class="svc-img"><img src="/images/svc-odor.jpg" alt="Запах" loading="lazy"></div><div class="svc-name" data-i18n="svc.3.pre">Устранение<span class="strong" data-i18n="svc.3.main">запахов</span></div></a>
-      <a class="svc" href="https://wa.me/77762776163?text=Здравствуйте%21%20Хочу%20заказать%20услугу%20%22Уничтожение%20грибка%22." target="_blank" rel="noopener"><div class="svc-img"><img src="/images/svc-fungus.jpg" alt="Грибок" loading="lazy"></div><div class="svc-name" data-i18n="svc.4.pre">Уничтожение<span class="strong" data-i18n="svc.4.main">грибка</span></div></a>
-      <a class="svc" href="https://wa.me/77762776163?text=Здравствуйте%21%20Хочу%20заказать%20услугу%20%22Уничтожение%20плесени%22." target="_blank" rel="noopener"><div class="svc-img"><img src="/images/svc-mold.jpg" alt="Плесень" loading="lazy"></div><div class="svc-name" data-i18n="svc.5.pre">Уничтожение<span class="strong" data-i18n="svc.5.main">плесени</span></div></a>
-      <a class="svc" href="https://wa.me/77762776163?text=Здравствуйте%21%20Хочу%20заказать%20услугу%20%22Выведение%20кротов%22." target="_blank" rel="noopener"><div class="svc-img"><img src="/images/svc-mole.jpg" alt="Кроты" loading="lazy"></div><div class="svc-name" data-i18n="svc.6.pre">Выведение<span class="strong" data-i18n="svc.6.main">кротов</span></div></a>
-      <a class="svc" href="https://wa.me/77762776163?text=Здравствуйте%21%20Хочу%20заказать%20услугу%20%22Выведение%20змей%22." target="_blank" rel="noopener"><div class="svc-img"><img src="/images/svc-snake.jpg" alt="Змеи" loading="lazy"></div><div class="svc-name" data-i18n="svc.7.pre">Выведение<span class="strong" data-i18n="svc.7.main">змей</span></div></a>
-      <a class="svc" href="https://wa.me/77762776163?text=Здравствуйте%21%20Хочу%20заказать%20услугу%20%22Уничтожение%20кожееда%22." target="_blank" rel="noopener"><div class="svc-img"><img src="/images/svc-carpetbeetle.jpg" alt="Кожеед" loading="lazy"></div><div class="svc-name" data-i18n="svc.8.pre">Уничтожение<span class="strong" data-i18n="svc.8.main">кожееда</span></div></a>
-      <a class="svc" href="https://wa.me/77762776163?text=Здравствуйте%21%20Хочу%20заказать%20услугу%20%22Уничтожение%20крыс%20и%20мышей%22." target="_blank" rel="noopener"><div class="svc-img"><img src="/images/svc-rat.jpg" alt="Крысы" loading="lazy"></div><div class="svc-name" data-i18n="svc.9.pre">Выведение<span class="strong" data-i18n="svc.9.main">крыс и&nbsp;мышей</span></div></a>
-      <a class="svc" href="https://wa.me/77762776163?text=Здравствуйте%21%20Хочу%20заказать%20услугу%20%22Уничтожение%20комаров%22." target="_blank" rel="noopener"><div class="svc-img"><img src="/images/svc-mosquito.jpg" alt="Комары" loading="lazy"></div><div class="svc-name" data-i18n="svc.10.pre">Уничтожение<span class="strong" data-i18n="svc.10.main">комаров</span></div></a>
-      <a class="svc" href="https://wa.me/77762776163?text=Здравствуйте%21%20Хочу%20заказать%20услугу%20%22Уничтожение%20мокриц%22." target="_blank" rel="noopener"><div class="svc-img"><img src="/images/svc-woodlouse.jpg" alt="Мокрицы" loading="lazy"></div><div class="svc-name" data-i18n="svc.11.pre">Уничтожение<span class="strong" data-i18n="svc.11.main">мокриц</span></div></a>
-      <a class="svc" href="https://wa.me/77762776163?text=Здравствуйте%21%20Хочу%20заказать%20услугу%20%22Уничтожение%20чешуйниц%22." target="_blank" rel="noopener"><div class="svc-img"><img src="/images/svc-silverfish.jpg" alt="Чешуйницы" loading="lazy"></div><div class="svc-name" data-i18n="svc.12.pre">Уничтожение<span class="strong" data-i18n="svc.12.main">чешуйниц</span></div></a>
-      <a class="svc" href="https://wa.me/77762776163?text=Здравствуйте%21%20Хочу%20заказать%20услугу%20%22Уничтожение%20пауков%22." target="_blank" rel="noopener"><div class="svc-img"><img src="/images/svc-spider.jpg" alt="Пауки" loading="lazy"></div><div class="svc-name" data-i18n="svc.13.pre">Уничтожение<span class="strong" data-i18n="svc.13.main">пауков</span></div></a>
-      <a class="svc" href="https://wa.me/77762776163?text=Здравствуйте%21%20Хочу%20заказать%20услугу%20%22Уничтожение%20клещей%22." target="_blank" rel="noopener"><div class="svc-img"><img src="/images/svc-tick.jpg" alt="Клещи" loading="lazy"></div><div class="svc-name" data-i18n="svc.14.pre">Уничтожение<span class="strong" data-i18n="svc.14.main">клещей</span></div></a>
-      <a class="svc" href="https://wa.me/77762776163?text=Здравствуйте%21%20Хочу%20заказать%20услугу%20%22Уничтожение%20осиных%20гнёзд%22." target="_blank" rel="noopener"><div class="svc-img"><img src="/images/svc-wasp.jpg" alt="Осы" loading="lazy"></div><div class="svc-name" data-i18n="svc.15.pre">Уничтожение<span class="strong" data-i18n="svc.15.main">осиных гнёзд</span></div></a>
-      <a class="svc" href="https://wa.me/77762776163?text=Здравствуйте%21%20Хочу%20заказать%20услугу%20%22Уничтожение%20муравьёв%22." target="_blank" rel="noopener"><div class="svc-img"><img src="/images/svc-ant.jpg" alt="Муравьи" loading="lazy"></div><div class="svc-name" data-i18n="svc.16.pre">Уничтожение<span class="strong" data-i18n="svc.16.main">муравьёв</span></div></a>
-      <a class="svc" href="https://wa.me/77762776163?text=Здравствуйте%21%20Хочу%20заказать%20услугу%20%22Уничтожение%20блох%22." target="_blank" rel="noopener"><div class="svc-img"><img src="/images/svc-flea.jpg" alt="Блохи" loading="lazy"></div><div class="svc-name" data-i18n="svc.17.pre">Уничтожение<span class="strong" data-i18n="svc.17.main">блох</span></div></a>
-      <a class="svc" href="https://wa.me/77762776163?text=Здравствуйте%21%20Хочу%20заказать%20услугу%20%22Уничтожение%20моли%22." target="_blank" rel="noopener"><div class="svc-img"><img src="/images/svc-moth.jpg" alt="Моль" loading="lazy"></div><div class="svc-name" data-i18n="svc.18.pre">Уничтожение<span class="strong" data-i18n="svc.18.main">моли</span></div></a>
-      <a class="svc" href="https://wa.me/77762776163?text=Здравствуйте%21%20Хочу%20заказать%20услугу%20%22Обработка%20участка%22." target="_blank" rel="noopener"><div class="svc-img"><img src="/images/svc-yard.jpg" alt="Участок" loading="lazy"></div><div class="svc-name" data-i18n="svc.19.pre">Обработка<span class="strong" data-i18n="svc.19.main">участка</span></div></a>
+      <a class="svc" href="https://wa.me/77762776163?text=Здравствуйте%21%20Хочу%20заказать%20услугу%20%22Уничтожение%20клопов%22." target="_blank" rel="noopener" data-conv="whatsapp"><div class="svc-img"><img src="/images/svc-bedbug.jpg" alt="Клопы" loading="lazy"></div><div class="svc-name" data-i18n="svc.1.pre">Уничтожение<span class="strong" data-i18n="svc.1.main">клопов</span></div></a>
+      <a class="svc" href="https://wa.me/77762776163?text=Здравствуйте%21%20Хочу%20заказать%20услугу%20%22Уничтожение%20тараканов%22." target="_blank" rel="noopener" data-conv="whatsapp"><div class="svc-img"><img src="/images/svc-cockroach.jpg" alt="Тараканы" loading="lazy"></div><div class="svc-name" data-i18n="svc.2.pre">Уничтожение<span class="strong" data-i18n="svc.2.main">тараканов</span></div></a>
+      <a class="svc" href="https://wa.me/77762776163?text=Здравствуйте%21%20Хочу%20заказать%20услугу%20%22Устранение%20запаха%22." target="_blank" rel="noopener" data-conv="whatsapp"><div class="svc-img"><img src="/images/svc-odor.jpg" alt="Запах" loading="lazy"></div><div class="svc-name" data-i18n="svc.3.pre">Устранение<span class="strong" data-i18n="svc.3.main">запахов</span></div></a>
+      <a class="svc" href="https://wa.me/77762776163?text=Здравствуйте%21%20Хочу%20заказать%20услугу%20%22Уничтожение%20грибка%22." target="_blank" rel="noopener" data-conv="whatsapp"><div class="svc-img"><img src="/images/svc-fungus.jpg" alt="Грибок" loading="lazy"></div><div class="svc-name" data-i18n="svc.4.pre">Уничтожение<span class="strong" data-i18n="svc.4.main">грибка</span></div></a>
+      <a class="svc" href="https://wa.me/77762776163?text=Здравствуйте%21%20Хочу%20заказать%20услугу%20%22Уничтожение%20плесени%22." target="_blank" rel="noopener" data-conv="whatsapp"><div class="svc-img"><img src="/images/svc-mold.jpg" alt="Плесень" loading="lazy"></div><div class="svc-name" data-i18n="svc.5.pre">Уничтожение<span class="strong" data-i18n="svc.5.main">плесени</span></div></a>
+      <a class="svc" href="https://wa.me/77762776163?text=Здравствуйте%21%20Хочу%20заказать%20услугу%20%22Выведение%20кротов%22." target="_blank" rel="noopener" data-conv="whatsapp"><div class="svc-img"><img src="/images/svc-mole.jpg" alt="Кроты" loading="lazy"></div><div class="svc-name" data-i18n="svc.6.pre">Выведение<span class="strong" data-i18n="svc.6.main">кротов</span></div></a>
+      <a class="svc" href="https://wa.me/77762776163?text=Здравствуйте%21%20Хочу%20заказать%20услугу%20%22Выведение%20змей%22." target="_blank" rel="noopener" data-conv="whatsapp"><div class="svc-img"><img src="/images/svc-snake.jpg" alt="Змеи" loading="lazy"></div><div class="svc-name" data-i18n="svc.7.pre">Выведение<span class="strong" data-i18n="svc.7.main">змей</span></div></a>
+      <a class="svc" href="https://wa.me/77762776163?text=Здравствуйте%21%20Хочу%20заказать%20услугу%20%22Уничтожение%20кожееда%22." target="_blank" rel="noopener" data-conv="whatsapp"><div class="svc-img"><img src="/images/svc-carpetbeetle.jpg" alt="Кожеед" loading="lazy"></div><div class="svc-name" data-i18n="svc.8.pre">Уничтожение<span class="strong" data-i18n="svc.8.main">кожееда</span></div></a>
+      <a class="svc" href="https://wa.me/77762776163?text=Здравствуйте%21%20Хочу%20заказать%20услугу%20%22Уничтожение%20крыс%20и%20мышей%22." target="_blank" rel="noopener" data-conv="whatsapp"><div class="svc-img"><img src="/images/svc-rat.jpg" alt="Крысы" loading="lazy"></div><div class="svc-name" data-i18n="svc.9.pre">Выведение<span class="strong" data-i18n="svc.9.main">крыс и&nbsp;мышей</span></div></a>
+      <a class="svc" href="https://wa.me/77762776163?text=Здравствуйте%21%20Хочу%20заказать%20услугу%20%22Уничтожение%20комаров%22." target="_blank" rel="noopener" data-conv="whatsapp"><div class="svc-img"><img src="/images/svc-mosquito.jpg" alt="Комары" loading="lazy"></div><div class="svc-name" data-i18n="svc.10.pre">Уничтожение<span class="strong" data-i18n="svc.10.main">комаров</span></div></a>
+      <a class="svc" href="https://wa.me/77762776163?text=Здравствуйте%21%20Хочу%20заказать%20услугу%20%22Уничтожение%20мокриц%22." target="_blank" rel="noopener" data-conv="whatsapp"><div class="svc-img"><img src="/images/svc-woodlouse.jpg" alt="Мокрицы" loading="lazy"></div><div class="svc-name" data-i18n="svc.11.pre">Уничтожение<span class="strong" data-i18n="svc.11.main">мокриц</span></div></a>
+      <a class="svc" href="https://wa.me/77762776163?text=Здравствуйте%21%20Хочу%20заказать%20услугу%20%22Уничтожение%20чешуйниц%22." target="_blank" rel="noopener" data-conv="whatsapp"><div class="svc-img"><img src="/images/svc-silverfish.jpg" alt="Чешуйницы" loading="lazy"></div><div class="svc-name" data-i18n="svc.12.pre">Уничтожение<span class="strong" data-i18n="svc.12.main">чешуйниц</span></div></a>
+      <a class="svc" href="https://wa.me/77762776163?text=Здравствуйте%21%20Хочу%20заказать%20услугу%20%22Уничтожение%20пауков%22." target="_blank" rel="noopener" data-conv="whatsapp"><div class="svc-img"><img src="/images/svc-spider.jpg" alt="Пауки" loading="lazy"></div><div class="svc-name" data-i18n="svc.13.pre">Уничтожение<span class="strong" data-i18n="svc.13.main">пауков</span></div></a>
+      <a class="svc" href="https://wa.me/77762776163?text=Здравствуйте%21%20Хочу%20заказать%20услугу%20%22Уничтожение%20клещей%22." target="_blank" rel="noopener" data-conv="whatsapp"><div class="svc-img"><img src="/images/svc-tick.jpg" alt="Клещи" loading="lazy"></div><div class="svc-name" data-i18n="svc.14.pre">Уничтожение<span class="strong" data-i18n="svc.14.main">клещей</span></div></a>
+      <a class="svc" href="https://wa.me/77762776163?text=Здравствуйте%21%20Хочу%20заказать%20услугу%20%22Уничтожение%20осиных%20гнёзд%22." target="_blank" rel="noopener" data-conv="whatsapp"><div class="svc-img"><img src="/images/svc-wasp.jpg" alt="Осы" loading="lazy"></div><div class="svc-name" data-i18n="svc.15.pre">Уничтожение<span class="strong" data-i18n="svc.15.main">осиных гнёзд</span></div></a>
+      <a class="svc" href="https://wa.me/77762776163?text=Здравствуйте%21%20Хочу%20заказать%20услугу%20%22Уничтожение%20муравьёв%22." target="_blank" rel="noopener" data-conv="whatsapp"><div class="svc-img"><img src="/images/svc-ant.jpg" alt="Муравьи" loading="lazy"></div><div class="svc-name" data-i18n="svc.16.pre">Уничтожение<span class="strong" data-i18n="svc.16.main">муравьёв</span></div></a>
+      <a class="svc" href="https://wa.me/77762776163?text=Здравствуйте%21%20Хочу%20заказать%20услугу%20%22Уничтожение%20блох%22." target="_blank" rel="noopener" data-conv="whatsapp"><div class="svc-img"><img src="/images/svc-flea.jpg" alt="Блохи" loading="lazy"></div><div class="svc-name" data-i18n="svc.17.pre">Уничтожение<span class="strong" data-i18n="svc.17.main">блох</span></div></a>
+      <a class="svc" href="https://wa.me/77762776163?text=Здравствуйте%21%20Хочу%20заказать%20услугу%20%22Уничтожение%20моли%22." target="_blank" rel="noopener" data-conv="whatsapp"><div class="svc-img"><img src="/images/svc-moth.jpg" alt="Моль" loading="lazy"></div><div class="svc-name" data-i18n="svc.18.pre">Уничтожение<span class="strong" data-i18n="svc.18.main">моли</span></div></a>
+      <a class="svc" href="https://wa.me/77762776163?text=Здравствуйте%21%20Хочу%20заказать%20услугу%20%22Обработка%20участка%22." target="_blank" rel="noopener" data-conv="whatsapp"><div class="svc-img"><img src="/images/svc-yard.jpg" alt="Участок" loading="lazy"></div><div class="svc-name" data-i18n="svc.19.pre">Обработка<span class="strong" data-i18n="svc.19.main">участка</span></div></a>
     </div>
   </div>
 </section>
@@ -532,13 +564,13 @@ footer{background:#0A0A0A;color:#fff;padding:60px 0 22px}
       <h2 data-i18n="fc.title">Избавим от&nbsp;любых вредителей</h2>
       <p data-i18n="fc.sub">Оставьте заявку — выезд мастера в день обращения по всей Астане и области</p>
       <div class="fc-row">
-        <a href="tel:+77762776163" class="btn btn-light"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" width="18" height="18" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6A19.79 19.79 0 012.12 4.18 2 2 0 014.11 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"/></svg><span data-i18n="fc.btn1">Позвонить</span></a>
+        <a href="tel:+77762776163" class="btn btn-light" data-conv="call"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" width="18" height="18" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6A19.79 19.79 0 012.12 4.18 2 2 0 014.11 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"/></svg><span data-i18n="fc.btn1">Позвонить</span></a>
         <button class="btn btn-out-light" onclick="openModal()"><span data-i18n="fc.btn2">Онлайн-заявка</span></button>
       </div>
     </div>
     <div class="fc-cards">
-      <a href="tel:+77762776163" class="fc-card"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6A19.79 19.79 0 012.12 4.18 2 2 0 014.11 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"/></svg></div><div><div class="t" data-i18n="fc.c1.t">Телефон</div><div class="v">+7 776 277 6163</div></div></a>
-      <a href="https://wa.me/77762776163" target="_blank" rel="noopener" class="fc-card"><div class="ic"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.5 14.38c-.28-.14-1.66-.82-1.92-.91-.26-.1-.44-.14-.63.14-.19.28-.72.91-.88 1.09-.16.19-.33.21-.6.07-.28-.14-1.18-.43-2.24-1.38-.83-.74-1.39-1.65-1.55-1.93-.16-.28-.02-.43.12-.56.12-.12.28-.33.42-.49.14-.16.19-.28.28-.46.09-.19.05-.35-.02-.49-.07-.14-.63-1.51-.86-2.07-.23-.55-.46-.47-.63-.47l-.54-.01c-.18 0-.48.07-.74.35-.26.28-.97.95-.97 2.31 0 1.36 1 2.67 1.14 2.85.14.19 1.96 3 4.75 4.21.66.29 1.18.46 1.58.59.67.21 1.27.18 1.75.11.53-.08 1.66-.68 1.89-1.33.23-.65.23-1.2.16-1.33-.06-.12-.25-.2-.53-.34zM12 2.04C6.5 2.04 2.04 6.5 2.04 12c0 1.76.46 3.45 1.33 4.95L2 22l5.22-1.36c1.45.79 3.08 1.21 4.78 1.21 5.5 0 9.96-4.46 9.96-9.96 0-2.66-1.03-5.17-2.92-7.05C17.17 3.07 14.66 2.04 12 2.04"/></svg></div><div><div class="t" data-i18n="fc.c2.t">WhatsApp</div><div class="v" data-i18n="fc.c2.v">Написать в чат</div></div></a>
+      <a href="tel:+77762776163" class="fc-card" data-conv="call"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6A19.79 19.79 0 012.12 4.18 2 2 0 014.11 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"/></svg></div><div><div class="t" data-i18n="fc.c1.t">Телефон</div><div class="v">+7 776 277 6163</div></div></a>
+      <a href="https://wa.me/77762776163" target="_blank" rel="noopener" class="fc-card" data-conv="whatsapp"><div class="ic"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.5 14.38c-.28-.14-1.66-.82-1.92-.91-.26-.1-.44-.14-.63.14-.19.28-.72.91-.88 1.09-.16.19-.33.21-.6.07-.28-.14-1.18-.43-2.24-1.38-.83-.74-1.39-1.65-1.55-1.93-.16-.28-.02-.43.12-.56.12-.12.28-.33.42-.49.14-.16.19-.28.28-.46.09-.19.05-.35-.02-.49-.07-.14-.63-1.51-.86-2.07-.23-.55-.46-.47-.63-.47l-.54-.01c-.18 0-.48.07-.74.35-.26.28-.97.95-.97 2.31 0 1.36 1 2.67 1.14 2.85.14.19 1.96 3 4.75 4.21.66.29 1.18.46 1.58.59.67.21 1.27.18 1.75.11.53-.08 1.66-.68 1.89-1.33.23-.65.23-1.2.16-1.33-.06-.12-.25-.2-.53-.34zM12 2.04C6.5 2.04 2.04 6.5 2.04 12c0 1.76.46 3.45 1.33 4.95L2 22l5.22-1.36c1.45.79 3.08 1.21 4.78 1.21 5.5 0 9.96-4.46 9.96-9.96 0-2.66-1.03-5.17-2.92-7.05C17.17 3.07 14.66 2.04 12 2.04"/></svg></div><div><div class="t" data-i18n="fc.c2.t">WhatsApp</div><div class="v" data-i18n="fc.c2.v">Написать в чат</div></div></a>
       <div class="fc-card"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></div><div><div class="t" data-i18n="fc.c3.t">Режим работы</div><div class="v" data-i18n="fc.c3.v">Круглосуточно, 24/7</div></div></div>
     </div>
   </div>
@@ -554,8 +586,8 @@ footer{background:#0A0A0A;color:#fff;padding:60px 0 22px}
         </a>
         <p style="margin-top:8px" data-i18n="foot.desc">Профессиональная дезинфекция, дезинсекция и дератизация в Астане и Акмолинской области. Сертифицированные средства, гарантия, договор.</p>
         <div class="foot-social">
-          <a href="https://wa.me/77762776163" target="_blank" rel="noopener" aria-label="WhatsApp"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.5 14.38c-.28-.14-1.66-.82-1.92-.91-.26-.1-.44-.14-.63.14-.19.28-.72.91-.88 1.09-.16.19-.33.21-.6.07-.28-.14-1.18-.43-2.24-1.38-.83-.74-1.39-1.65-1.55-1.93-.16-.28-.02-.43.12-.56.12-.12.28-.33.42-.49.14-.16.19-.28.28-.46.09-.19.05-.35-.02-.49-.07-.14-.63-1.51-.86-2.07-.23-.55-.46-.47-.63-.47l-.54-.01c-.18 0-.48.07-.74.35-.26.28-.97.95-.97 2.31 0 1.36 1 2.67 1.14 2.85.14.19 1.96 3 4.75 4.21.66.29 1.18.46 1.58.59.67.21 1.27.18 1.75.11.53-.08 1.66-.68 1.89-1.33.23-.65.23-1.2.16-1.33-.06-.12-.25-.2-.53-.34zM12 2.04C6.5 2.04 2.04 6.5 2.04 12c0 1.76.46 3.45 1.33 4.95L2 22l5.22-1.36c1.45.79 3.08 1.21 4.78 1.21 5.5 0 9.96-4.46 9.96-9.96 0-2.66-1.03-5.17-2.92-7.05C17.17 3.07 14.66 2.04 12 2.04"/></svg></a>
-          <a href="tel:+77762776163" aria-label="Телефон"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6A19.79 19.79 0 012.12 4.18 2 2 0 014.11 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"/></svg></a>
+          <a href="https://wa.me/77762776163" target="_blank" rel="noopener" aria-label="WhatsApp" data-conv="whatsapp"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.5 14.38c-.28-.14-1.66-.82-1.92-.91-.26-.1-.44-.14-.63.14-.19.28-.72.91-.88 1.09-.16.19-.33.21-.6.07-.28-.14-1.18-.43-2.24-1.38-.83-.74-1.39-1.65-1.55-1.93-.16-.28-.02-.43.12-.56.12-.12.28-.33.42-.49.14-.16.19-.28.28-.46.09-.19.05-.35-.02-.49-.07-.14-.63-1.51-.86-2.07-.23-.55-.46-.47-.63-.47l-.54-.01c-.18 0-.48.07-.74.35-.26.28-.97.95-.97 2.31 0 1.36 1 2.67 1.14 2.85.14.19 1.96 3 4.75 4.21.66.29 1.18.46 1.58.59.67.21 1.27.18 1.75.11.53-.08 1.66-.68 1.89-1.33.23-.65.23-1.2.16-1.33-.06-.12-.25-.2-.53-.34zM12 2.04C6.5 2.04 2.04 6.5 2.04 12c0 1.76.46 3.45 1.33 4.95L2 22l5.22-1.36c1.45.79 3.08 1.21 4.78 1.21 5.5 0 9.96-4.46 9.96-9.96 0-2.66-1.03-5.17-2.92-7.05C17.17 3.07 14.66 2.04 12 2.04"/></svg></a>
+          <a href="tel:+77762776163" aria-label="Телефон" data-conv="call"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6A19.79 19.79 0 012.12 4.18 2 2 0 014.11 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"/></svg></a>
         </div>
       </div>
       <div class="foot-col">
@@ -585,8 +617,8 @@ footer{background:#0A0A0A;color:#fff;padding:60px 0 22px}
       <div class="foot-col">
         <h4 data-i18n="foot.h3">Контакты</h4>
         <ul>
-          <li><a href="tel:+77762776163">+7 776 277 6163</a></li>
-          <li><a href="https://wa.me/77762776163" target="_blank" rel="noopener">WhatsApp</a></li>
+          <li><a href="tel:+77762776163" data-conv="call">+7 776 277 6163</a></li>
+          <li><a href="https://wa.me/77762776163" target="_blank" rel="noopener" data-conv="whatsapp">WhatsApp</a></li>
           <li data-i18n="foot.mode">Режим: круглосуточно</li>
           <li data-i18n="foot.area">Астана и Акмолинская область</li>
         </ul>
@@ -608,8 +640,8 @@ footer{background:#0A0A0A;color:#fff;padding:60px 0 22px}
   <div class="mbb-row">
     <a href="#services" class="mbb-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg><span data-i18n="mbb.services">Услуги</span></a>
     <a href="#contacts" class="mbb-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg><span data-i18n="mbb.contacts">Контакты</span></a>
-    <a href="tel:+77762776163" class="mbb-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6A19.79 19.79 0 012.12 4.18 2 2 0 014.11 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"/></svg><span data-i18n="mbb.call">Звонок</span></a>
-    <a href="https://wa.me/77762776163" target="_blank" rel="noopener" class="mbb-btn"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.5 14.38c-.28-.14-1.66-.82-1.92-.91-.26-.1-.44-.14-.63.14-.19.28-.72.91-.88 1.09-.16.19-.33.21-.6.07-.28-.14-1.18-.43-2.24-1.38-.83-.74-1.39-1.65-1.55-1.93-.16-.28-.02-.43.12-.56.12-.12.28-.33.42-.49.14-.16.19-.28.28-.46.09-.19.05-.35-.02-.49-.07-.14-.63-1.51-.86-2.07-.23-.55-.46-.47-.63-.47l-.54-.01c-.18 0-.48.07-.74.35-.26.28-.97.95-.97 2.31 0 1.36 1 2.67 1.14 2.85.14.19 1.96 3 4.75 4.21.66.29 1.18.46 1.58.59.67.21 1.27.18 1.75.11.53-.08 1.66-.68 1.89-1.33.23-.65.23-1.2.16-1.33-.06-.12-.25-.2-.53-.34zM12 2.04C6.5 2.04 2.04 6.5 2.04 12c0 1.76.46 3.45 1.33 4.95L2 22l5.22-1.36c1.45.79 3.08 1.21 4.78 1.21 5.5 0 9.96-4.46 9.96-9.96 0-2.66-1.03-5.17-2.92-7.05C17.17 3.07 14.66 2.04 12 2.04"/></svg><span>WhatsApp</span></a>
+    <a href="tel:+77762776163" class="mbb-btn" data-conv="call"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6A19.79 19.79 0 012.12 4.18 2 2 0 014.11 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"/></svg><span data-i18n="mbb.call">Звонок</span></a>
+    <a href="https://wa.me/77762776163" target="_blank" rel="noopener" class="mbb-btn" data-conv="whatsapp"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.5 14.38c-.28-.14-1.66-.82-1.92-.91-.26-.1-.44-.14-.63.14-.19.28-.72.91-.88 1.09-.16.19-.33.21-.6.07-.28-.14-1.18-.43-2.24-1.38-.83-.74-1.39-1.65-1.55-1.93-.16-.28-.02-.43.12-.56.12-.12.28-.33.42-.49.14-.16.19-.28.28-.46.09-.19.05-.35-.02-.49-.07-.14-.63-1.51-.86-2.07-.23-.55-.46-.47-.63-.47l-.54-.01c-.18 0-.48.07-.74.35-.26.28-.97.95-.97 2.31 0 1.36 1 2.67 1.14 2.85.14.19 1.96 3 4.75 4.21.66.29 1.18.46 1.58.59.67.21 1.27.18 1.75.11.53-.08 1.66-.68 1.89-1.33.23-.65.23-1.2.16-1.33-.06-.12-.25-.2-.53-.34zM12 2.04C6.5 2.04 2.04 6.5 2.04 12c0 1.76.46 3.45 1.33 4.95L2 22l5.22-1.36c1.45.79 3.08 1.21 4.78 1.21 5.5 0 9.96-4.46 9.96-9.96 0-2.66-1.03-5.17-2.92-7.05C17.17 3.07 14.66 2.04 12 2.04"/></svg><span>WhatsApp</span></a>
   </div>
 </nav>
 
@@ -657,7 +689,7 @@ footer{background:#0A0A0A;color:#fff;padding:60px 0 22px}
       </div>
       <div class="bmenu-cta">
         <div class="tx" data-i18n="menu.cta">Бесплатная консультация · ответим за 10 минут</div>
-        <a href="https://wa.me/77762776163" target="_blank" rel="noopener" class="btn btn-dark"><svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M17.5 14.38c-.28-.14-1.66-.82-1.92-.91-.26-.1-.44-.14-.63.14-.19.28-.72.91-.88 1.09-.16.19-.33.21-.6.07-.28-.14-1.18-.43-2.24-1.38-.83-.74-1.39-1.65-1.55-1.93-.16-.28-.02-.43.12-.56.12-.12.28-.33.42-.49.14-.16.19-.28.28-.46.09-.19.05-.35-.02-.49-.07-.14-.63-1.51-.86-2.07-.23-.55-.46-.47-.63-.47l-.54-.01c-.18 0-.48.07-.74.35-.26.28-.97.95-.97 2.31 0 1.36 1 2.67 1.14 2.85.14.19 1.96 3 4.75 4.21.66.29 1.18.46 1.58.59.67.21 1.27.18 1.75.11.53-.08 1.66-.68 1.89-1.33.23-.65.23-1.2.16-1.33-.06-.12-.25-.2-.53-.34zM12 2.04C6.5 2.04 2.04 6.5 2.04 12c0 1.76.46 3.45 1.33 4.95L2 22l5.22-1.36c1.45.79 3.08 1.21 4.78 1.21 5.5 0 9.96-4.46 9.96-9.96 0-2.66-1.03-5.17-2.92-7.05C17.17 3.07 14.66 2.04 12 2.04"/></svg>WhatsApp</a>
+        <a href="https://wa.me/77762776163" target="_blank" rel="noopener" class="btn btn-dark" data-conv="whatsapp"><svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M17.5 14.38c-.28-.14-1.66-.82-1.92-.91-.26-.1-.44-.14-.63.14-.19.28-.72.91-.88 1.09-.16.19-.33.21-.6.07-.28-.14-1.18-.43-2.24-1.38-.83-.74-1.39-1.65-1.55-1.93-.16-.28-.02-.43.12-.56.12-.12.28-.33.42-.49.14-.16.19-.28.28-.46.09-.19.05-.35-.02-.49-.07-.14-.63-1.51-.86-2.07-.23-.55-.46-.47-.63-.47l-.54-.01c-.18 0-.48.07-.74.35-.26.28-.97.95-.97 2.31 0 1.36 1 2.67 1.14 2.85.14.19 1.96 3 4.75 4.21.66.29 1.18.46 1.58.59.67.21 1.27.18 1.75.11.53-.08 1.66-.68 1.89-1.33.23-.65.23-1.2.16-1.33-.06-.12-.25-.2-.53-.34zM12 2.04C6.5 2.04 2.04 6.5 2.04 12c0 1.76.46 3.45 1.33 4.95L2 22l5.22-1.36c1.45.79 3.08 1.21 4.78 1.21 5.5 0 9.96-4.46 9.96-9.96 0-2.66-1.03-5.17-2.92-7.05C17.17 3.07 14.66 2.04 12 2.04"/></svg>WhatsApp</a>
       </div>
       <div class="bmenu-lang"><button data-lang="ru" class="active">Русский</button><button data-lang="kz">Қазақша</button></div>
     </div>
@@ -981,10 +1013,20 @@ function showToast(text){
   toastTimer = setTimeout(() => t.classList.remove('show'), 3500);
 }
 
+// === Google Ads: автоматическая отправка конверсии по всем точкам контакта ===
+// Все ссылки tel: и WhatsApp + отправка формы помечены атрибутом data-conv.
+document.querySelectorAll('[data-conv]').forEach(el => {
+  el.addEventListener('click', () => {
+    if (typeof window.dzTrackConversion === 'function') window.dzTrackConversion();
+  });
+});
+
 function submitOrder(e){
   e.preventDefault();
   const f = e.target;
   const d = Object.fromEntries(new FormData(f).entries());
+  // Отправляем конверсию в Google Ads при отправке формы
+  if (typeof window.dzTrackConversion === 'function') window.dzTrackConversion();
   let msg = `🟢 *Заявка с сайта DizAstana*%0A`;
   msg += `👤 Имя: ${d.name}%0A`;
   msg += `📞 Телефон: ${d.phone}%0A`;
