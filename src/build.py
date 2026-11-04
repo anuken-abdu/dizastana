@@ -169,12 +169,10 @@ def nav_html():
 <div class="nav-m">{btns("Здравствуйте! Нужна обработка в Астане.", True)}</div></nav>'''
 
 def gtag():
-    """Тег Google в том виде, как его выдаёт Google Ads («Добавление тега вручную»), сразу после <head>."""
-    ids = [x for x in (GADS_ID, GA_ID) if x]
-    if not ids: return ""
-    return (f'<script async src="https://www.googletagmanager.com/gtm.js?id={ids[0]}"></script>\n'
-            '<script>\n  window.dataLayer = window.dataLayer || [];\n  function gtag(){dataLayer.push(arguments);}\n  gtag(\'js\', new Date());\n'
-            + "".join(f"  gtag('config', '{x}');\n" for x in ids[1:]) + "</script>\n")
+    """Единый тег Google — ровно как выдаёт Google («Вручную»), сразу после <head>. Второй тег не добавляем."""
+    if not TAG_ID: return ""
+    return (f'<script async src="https://www.googletagmanager.com/gtm.js?id={TAG_ID}"></script>\n'
+            '<script>\n  window.dataLayer = window.dataLayer || [];\n  function gtag(){dataLayer.push(arguments);}\n  gtag(\'js\', new Date());\n</script>\n')
 
 def page(path, title, desc, body, schemas=(), crumbs=None, prio="0.7"):
     PAGES.append((path, prio))
