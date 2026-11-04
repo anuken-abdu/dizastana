@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Генератор сайта санитарной службы (Астана): python3 src/build.py → dist/"""
+"""Генератор сайта DizAstana (санитарная служба, Астана): python3 src/build.py → dist/"""
 import html, json, re, shutil, sys
 from datetime import date
 from pathlib import Path
@@ -8,7 +8,7 @@ from data import *
 
 ROOT = Path(__file__).resolve().parent.parent
 DIST = ROOT / "dist"
-VER = "0511261500"
+VER = "0511262000"
 TODAY = date.today().isoformat()
 E = lambda s: html.escape(str(s), quote=True)
 PAGES = []
@@ -16,7 +16,12 @@ P = {p["slug"]: p for p in PESTS}; S = {s["slug"]: s for s in SERVICES}
 
 def wa(text): return f"https://wa.me/{WA_NUMBER}?text=" + re.sub(r"\s", "%20", html.escape(text))
 def wa_attr(text): return f'href="{wa(text)}" target="_blank" rel="noopener"'
-def ic(name, cls="ic"): return f'<img class="{cls}" src="/assets/ic/{name}.svg?v={VER}" alt="" width="64" height="64" loading="lazy">'
+PH = json.loads((Path(__file__).parent / "ph_icons.json").read_text(encoding="utf-8"))
+def ph(name): return f'<svg class="ph" viewBox="0 0 256 256" aria-hidden="true" focusable="false">{PH[name]}</svg>'
+def photo(p, cls="pc-p", big=False, eager=False):
+    src = f"/assets/pests/{p['photo']}{'' if big else '-s'}.webp?v={VER}"
+    w, h = (960, 720) if big else (480, 360)
+    return f'<img class="{cls}" src="{src}" alt="{E(p["name"])}" width="{w}" height="{h}"{"" if eager else " loading=" + chr(34) + "lazy" + chr(34)} decoding="async">'
 
 ICON = {
  "phone": '<path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/>',
@@ -31,7 +36,7 @@ def ui(n, cls="ui"): return f'<svg class="{cls}" viewBox="0 0 24 24" aria-hidden
 
 def logo(dark=False):
     return (f'<a class="logo{" logo-d" if dark else ""}" href="/" aria-label="{BRAND} — на главную"><img src="/assets/logo-mark.svg" alt="" width="44" height="44">'
-            f'<span class="logo-t">{BRAND}<small>{BRAND_SUB}</small></span></a>')
+            f'<span class="logo-t">Diz<i>Astana</i></span></a>')
 
 def btns(msg, light=False):
     return (f'<div class="btns"><a class="btn btn-p" href="tel:{PHONE_TEL}">{ui("phone")}Позвонить</a>'
@@ -52,20 +57,25 @@ def ph_hero(h1, lead, crumbs, msg, art=""):
     return f'<section class="phd"><div class="wrap">{crumbs_html(crumbs)}<div class="phd-in{" has-art" if art else ""}"><div><h1>{h1}</h1><p class="lead-t">{lead}</p>{btns(msg, True)}</div>{side}</div></div></section>'
 
 # ---------------------------------------------------------------- блоки
-def pest_cards(items=None, loc=""):
-    items = items or PESTS
-    return '<div class="pests">' + "".join(
-        f'<a class="pc" href="/vrediteli/{p["slug"]}/"><span class="pc-i">{ic(p["ic"])}</span><b>{E(p["name"])}</b><small>Уничтожение {E(p["gen"])}{(" " + loc) if loc else ""}</small></a>' for p in items) + (
-        f'<button class="pc pc-q" type="button" data-chat><span class="pc-i">{ui("spark")}</span><b>Не знаете, кто это?</b><small>Опишите следы или пришлите фото в WhatsApp — подскажем</small></button>' if len(items) == len(PESTS) else "") + "</div>"
+def pest_cards(items=None, full=False):
+    """Фото-карточки вредителей. Без фото — тёмная плитка; крысы и мыши вместе — одна широкая плитка «Крысы и мыши»."""
+    items = list(items or [p for p in PESTS if p.get("photo")])
+    out = [f'<a class="pc" href="/vrediteli/{p["slug"]}/">{photo(p)}<b>{E(p["name"])}</b></a>' for p in items if p.get("photo")]
+    rest = [p for p in items if not p.get("photo")]
+    if full or {"krysy", "myshi"} <= {p["slug"] for p in rest}:
+        rest = [p for p in rest if p["slug"] not in ("krysy", "myshi")]
+        out.append('<a class="pc pc-d pc-w" href="/uslugi/deratizaciya/"><b>Крысы и мыши</b><span>Дератизация</span></a>')
+    out += [f'<a class="pc pc-d" href="/vrediteli/{p["slug"]}/"><b>{E(p["name"])}</b><span>Подробнее</span></a>' for p in rest]
+    return f'<div class="pests{" pests-4" if len(out) <= 4 and not full else ""}">' + "".join(out) + "</div>"
 
 def svc_cards(items=None):
     items = items or SERVICES
     return '<div class="svcs">' + "".join(
-        f'<a class="sc" href="/uslugi/{s["slug"]}/"><span class="sc-i">{ic(s["ic"])}</span><b>{E(s["name"])}</b><span>{E(s["sub"])}</span>{ui("arrow", "ui sc-a")}</a>' for s in items) + "</div>"
+        f'<a class="sc" href="/uslugi/{s["slug"]}/"><span class="sc-n">{SERVICES.index(s) + 1:02d}</span><b>{E(s["name"])}</b><span class="sc-s">{E(s["sub"])}</span>{ui("arrow", "ui sc-a")}</a>' for s in items) + "</div>"
 
 def obj_cards(items=None):
     items = items or OBJECTS
-    return '<div class="objs">' + "".join(f'<a class="oc" href="/obekty/{o[0]}/">{ic(o[3])}<b>{E(o[1])}</b></a>' for o in items) + "</div>"
+    return '<div class="objs">' + "".join(f'<a class="oc" href="/obekty/{o[0]}/">{ph(o[3])}<b>{E(o[1])}</b></a>' for o in items) + "</div>"
 
 def steps_html():
     return '<ol class="steps">' + "".join(f'<li><span>{i}</span><b>{E(t)}</b><p>{E(d)}</p></li>' for i, (t, d) in enumerate(STEPS, 1)) + "</ol>"
@@ -74,15 +84,15 @@ def factors_html():
     return '<div class="fac">' + "".join(f'<div><b>{E(t)}</b><p>{E(d)}</p></div>' for t, d in PRICE_FACTORS) + "</div>"
 
 def prep_html():
-    return '<ul class="prep">' + "".join(f"<li>{ui('check')}{E(x)}</li>" for x in PREP) + "</ul>"
+    return '<ul class="prep">' + "".join(f"<li>{E(x)}</li>" for x in PREP) + "</ul>"
 
 def faq_html(faq):
     return '<div class="faq">' + "".join(f'<details><summary>{E(q)}{ui("chev")}</summary><p>{E(a)}</p></details>' for q, a in faq) + "</div>"
 
 def districts_html(cur=""):
     city = [d for d in DISTRICTS if not d.get("suburb")]; sub = [d for d in DISTRICTS if d.get("suburb")]
-    li = lambda ds: "".join(f'<li><a href="/rayony/{d["slug"]}/"{" class=cur" if d["slug"] == cur else ""}>{ui("pin")}{E(d["short"])}</a></li>' for d in ds)
-    return f'<div class="geo"><div><h3>Районы Астаны</h3><ul class="chips">{li(city)}</ul></div><div><h3>Пригороды</h3><ul class="chips">{li(sub)}</ul></div></div>'
+    li = lambda ds: "".join(f'<li><a href="/rayony/{d["slug"]}/"{" aria-current=page" if d["slug"] == cur else ""}>{E(d["short"])}{ui("arrow")}</a></li>' for d in ds)
+    return f'<div class="geo"><div><h3>Районы Астаны</h3><ul class="dl dl-3">{li(city)}</ul></div><div><h3>Пригороды</h3><ul class="dl">{li(sub)}</ul></div></div>'
 
 def geo_sec(cur=""):
     return sec("Работаем по всей Астане", districts_html(cur), "Выезжаем во все районы столицы и ближайшие пригороды. Время приезда согласуем при заявке.", alt=True, sid="rayony")
@@ -120,10 +130,10 @@ def faq_schema(faq):
 
 # ---------------------------------------------------------------- шаблон
 def nav_html():
-    pl = "".join(f'<li><a href="/vrediteli/{p["slug"]}/">{ic(p["ic"], "ic ic-s")}{E(p["name"])}</a></li>' for p in PESTS)
-    sl = "".join(f'<li><a href="/uslugi/{s["slug"]}/">{ic(s["ic"], "ic ic-s")}{E(s["name"])}</a></li>' for s in SERVICES)
+    pl = "".join(f'<li><a href="/vrediteli/{p["slug"]}/">{E(p["name"])}</a></li>' for p in PESTS)
+    sl = "".join(f'<li><a href="/uslugi/{s["slug"]}/">{E(s["name"])}</a></li>' for s in SERVICES)
     return f'''<nav class="nav" id="nav" aria-label="Меню"><ul>
-<li class="has"><a href="/vrediteli/">Вредители</a><ul class="sub sub-2">{pl}</ul></li>
+<li class="has"><a href="/vrediteli/">Вредители</a><ul class="sub sub-3">{pl}</ul></li>
 <li class="has"><a href="/uslugi/">Услуги</a><ul class="sub">{sl}</ul></li>
 <li><a href="/obekty/">Объекты</a></li><li><a href="/rayony/">Районы</a></li><li><a href="/stoimost/">Стоимость</a></li><li><a href="/stati/">Статьи</a></li><li><a href="/kontakty/">Контакты</a></li></ul>
 <div class="nav-m">{btns("Здравствуйте! Нужна обработка в Астане.", True)}</div></nav>'''
@@ -164,7 +174,7 @@ def page(path, title, desc, body, schemas=(), crumbs=None, prio="0.7"):
 <body>
 <a class="skip" href="#main">К содержимому</a>
 <header class="hdr"><div class="wrap hdr-in">{logo()}{nav_html()}
-<div class="hdr-c"><a class="hdr-ph" href="tel:{PHONE_TEL}">{PHONE_DISPLAY}<small>Астана и пригороды</small></a>
+<div class="hdr-c"><a class="hdr-ph" href="tel:{PHONE_TEL}">{PHONE_DISPLAY}</a>
 <a class="hdr-call" href="tel:{PHONE_TEL}" aria-label="Позвонить {PHONE_DISPLAY}">{ui("phone")}</a>
 <a class="btn btn-p btn-s hdr-wa" {wa_attr("Здравствуйте! Нужна обработка в Астане.")}>{ui("wa")}WhatsApp</a>
 <button class="burger" type="button" aria-label="Открыть меню" aria-expanded="false" aria-controls="nav">{ui("menu")}{ui("close", "ui ui-x")}</button></div></div></header>
@@ -173,12 +183,12 @@ def page(path, title, desc, body, schemas=(), crumbs=None, prio="0.7"):
 </main>
 <footer class="ftr"><div class="wrap ftr-g">
 <div>{logo(True)}<p>Дезинсекция, дератизация, дезинфекция и удаление запахов в Астане и пригородах.</p><a class="ftr-ph" href="tel:{PHONE_TEL}">{PHONE_DISPLAY}</a></div>
-<div><h4>Вредители</h4><ul>{"".join(f'<li><a href="/vrediteli/{p["slug"]}/">{E(p["name"])}</a></li>' for p in PESTS[:7])}</ul></div>
-<div><h4>Услуги</h4><ul>{"".join(f'<li><a href="/uslugi/{s["slug"]}/">{E(s["name"])}</a></li>' for s in SERVICES[:7])}</ul></div>
+<div><h4>Вредители</h4><ul>{"".join(f'<li><a href="/vrediteli/{p["slug"]}/">{E(p["name"])}</a></li>' for p in PESTS[:8])}</ul></div>
+<div><h4>Услуги</h4><ul>{"".join(f'<li><a href="/uslugi/{s["slug"]}/">{E(s["name"])}</a></li>' for s in SERVICES[:8])}</ul></div>
 <div><h4>Компания</h4><ul><li><a href="/obekty/">Объекты</a></li><li><a href="/rayony/">Районы Астаны</a></li><li><a href="/stoimost/">Стоимость</a></li><li><a href="/stati/">Статьи</a></li><li><a href="/o-kompanii/">О компании</a></li><li><a href="/kontakty/">Контакты</a></li><li><a href="/privacy-policy/">Политика конфиденциальности</a></li></ul></div>
 </div><div class="wrap ftr-b"><span>© {date.today().year} {BRAND}. Информация на сайте не является публичной офертой.</span><a href="{DEV[1]}" target="_blank" rel="noopener">Разработка сайта — {DEV[0]}</a></div></footer>
 <div class="fab"><button class="fab-b" type="button" data-back aria-label="Назад" title="Назад">{ui("back")}</button><button class="fab-b" type="button" data-top aria-label="Наверх" title="Наверх">{ui("up")}</button></div>
-<button class="chat-o" type="button" data-chat aria-label="ИИ-консультант"><span class="chat-o-i">{ui("spark")}</span><span class="chat-o-t">ИИ-консультант<small>ответит за минуту</small></span></button>
+<button class="chat-o" type="button" data-chat aria-label="ИИ-консультант"><span class="chat-o-i">{ui("spark")}</span><span class="chat-o-t">ИИ-консультант</span></button>
 <div class="chat" id="chat" hidden role="dialog" aria-label="ИИ-консультант"><div class="chat-h"><b>{BRAND}<small>ИИ-консультант</small></b><button type="button" data-chat-x aria-label="Закрыть чат">{ui("close")}</button></div>
 <div class="chat-l" aria-live="polite"></div><div class="chat-q"></div>
 <form class="chat-f"><input name="q" autocomplete="off" placeholder="Напишите вопрос" aria-label="Ваш вопрос"><button type="submit" aria-label="Отправить">{ui("send")}</button></form>
@@ -191,15 +201,14 @@ def page(path, title, desc, body, schemas=(), crumbs=None, prio="0.7"):
 
 # ---------------------------------------------------------------- страницы
 def build_home():
-    cloud = "".join(f'<a class="hc hc-{i}" href="/vrediteli/{p["slug"]}/" title="{E(p["name"])}">{ic(p["ic"])}</a>' for i, p in enumerate(PESTS[:8]))
+    hp = [P[x] for x in ("tarakany", "klopy", "muravi", "osy", "blohi", "kleshchi", "mol")]
+    cloud = "".join(f'<a class="hc hc-{i}" href="/vrediteli/{p["slug"]}/" title="{E(p["name"])}">{photo(p, "hc-p", eager=True)}</a>' for i, p in enumerate(hp))
     body = f'''<section class="hero"><div class="wrap hero-in"><div class="hero-t">
-<p class="eyebrow">{ui("pin")}Санитарная служба · Астана и пригороды</p>
-<h1>Дезинсекция, дератизация и <em>дезинфекция</em> в Астане</h1>
-<p class="lead-t">Уничтожаем тараканов, клопов, блох, муравьёв, крыс и мышей, убираем плесень и неприятные запахи. Квартиры, частные дома, кафе, офисы и склады во всех районах столицы.</p>
-{btns("Здравствуйте! Нужна обработка в Астане.", True)}
-<ul class="hero-f"><li>{ui("check")}Стоимость — до выезда</li><li>{ui("check")}Все районы и пригороды</li><li>{ui("check")}Квартиры и бизнес</li></ul></div>
+<h1>Дезинсекция, дератизация и&nbsp;<em>дезинфекция</em> в&nbsp;Астане</h1>
+<p class="lead-t">Избавляем от насекомых и грызунов, убираем плесень и стойкие запахи в квартирах, домах и на объектах бизнеса.</p>
+{btns("Здравствуйте! Нужна обработка в Астане.", True)}</div>
 <div class="hero-v" aria-hidden="true"><div class="hex-cloud">{cloud}</div></div></div></section>
-{sec("От кого избавляем", pest_cards(), "Выберите вредителя — расскажем, как его найти, как проходит обработка и как подготовиться.", sid="vrediteli", link=("Все вредители", "/vrediteli/"))}
+{sec("От кого избавляем", pest_cards(full=True), "Выберите вредителя: признаки, обработка и подготовка.", sid="vrediteli", link=("Все вредители", "/vrediteli/"))}
 {sec("Услуги", svc_cards(), "Подбираем метод под задачу и объект.", alt=True, link=("Все услуги", "/uslugi/"))}
 {sec("Обрабатываем любые объекты", obj_cards(), link=("Все объекты", "/obekty/"))}
 {callout()}
@@ -216,16 +225,18 @@ def build_home():
 
 def build_pests():
     body = f'''{ph_hero("Уничтожение вредителей в Астане", "Насекомые и грызуны в квартирах, домах и на объектах бизнеса. Выберите вредителя, чтобы узнать подробности.", [("Вредители", "/vrediteli/")], "Здравствуйте! Нужна обработка от вредителей.")}
-{sec("Вредители", pest_cards())}{callout()}{lead_form()}'''
+{sec("Насекомые", pest_cards(full=True))}
+{sec("Также обрабатываем", pest_cards([p for p in PESTS if not p.get("photo")]), alt=True)}{callout()}{lead_form()}'''
     page("/vrediteli/", f"Уничтожение вредителей в Астане — {BRAND}", "Уничтожение тараканов, клопов, блох, муравьёв, моли, ос, клещей, крыс и мышей в Астане.", body, crumbs=[("Вредители", "/vrediteli/")], prio="0.9")
     for p in PESTS:
         url = f"/vrediteli/{p['slug']}/"; s = S[p["svc"]]
-        signs = "".join(f"<li>{ui('alert')}{E(x)}</li>" for x in p["signs"])
+        signs = "".join(f"<li>{E(x)}</li>" for x in p["signs"])
         faq = p["faq"] + [FAQ[0], FAQ[2], FAQ[4]]
-        others = [x for x in PESTS if x is not p and x["svc"] == p["svc"]][:4] or [x for x in PESTS if x is not p][:4]
-        body = f'''{ph_hero(f"Уничтожение {E(p['gen'])} в Астане", E(p["intro"]), [("Вредители", "/vrediteli/"), (p["name"], url)], f"Здравствуйте! Нужна обработка от: {p['name'].lower()}.", ic(p["ic"], "ic ic-xl"))}
+        ph_list = [x for x in PESTS if x.get("photo") and x is not p]; k = PESTS.index(p) * 3 % len(ph_list)
+        others = (ph_list[k:] + ph_list[:k])[:4]
+        body = f'''{ph_hero(f"Уничтожение {E(p['gen'])} в Астане", E(p["intro"]), [("Вредители", "/vrediteli/"), (p["name"], url)], f"Здравствуйте! Нужна обработка от: {p['name'].lower()}.", photo(p, "phd-p", big=True, eager=True) if p.get("photo") else "")}
 <section class="sec"><div class="wrap two"><div><h2>Признаки</h2><ul class="signs">{signs}</ul></div><div><h2>Как проходит обработка</h2><p class="txt">{E(p["how"])}</p>
-<a class="lnk" href="/uslugi/{s['slug']}/">{E(s["name"])} — подробнее {ui("arrow")}</a></div></div></section>
+<a class="lnk" href="/uslugi/{s['slug']}/">Подробнее об услуге {ui("arrow")}</a></div></div></section>
 {sec("Как подготовиться", prep_html(), alt=True)}
 {callout(f"Здравствуйте! Нужна обработка от: {p['name'].lower()}.")}
 {sec("Вопросы", faq_html(faq))}
@@ -242,8 +253,9 @@ def build_services():
     for s in SERVICES:
         url = f"/uslugi/{s['slug']}/"
         kinds = "".join(f'<div><b>{E(t)}</b><p>{E(d)}</p></div>' for t, d in s["kinds"])
-        rel = [p for p in PESTS if p["svc"] == s["slug"]]
-        body = f'''{ph_hero(f"{E(s['name'])} в Астане", E(s["lead"]), [("Услуги", "/uslugi/"), (s["name"], url)], f"Здравствуйте! Нужна услуга: {s['name'].lower()}.", ic(s["ic"], "ic ic-xl"))}
+        rel = [p for p in PESTS if p["svc"] == s["slug"] and p.get("photo")][:8]
+        rel = rel if len(rel) in (4, 8) else []
+        body = f'''{ph_hero(f"{E(s['name'])} в Астане", E(s["lead"]), [("Услуги", "/uslugi/"), (s["name"], url)], f"Здравствуйте! Нужна услуга: {s['name'].lower()}.")}
 <section class="sec"><div class="wrap two"><div class="prose">{"".join(f"<p>{E(x)}</p>" for x in s["body"])}</div><div class="kinds">{kinds}</div></div></section>
 {sec("От кого избавляем", pest_cards(rel), alt=True) if rel else ""}
 {sec("Как мы работаем", steps_html(), alt=not rel)}
@@ -260,7 +272,7 @@ def build_objects():
     page("/obekty/", f"Санитарная обработка объектов в Астане — {BRAND}", "Дезинсекция и дезинфекция квартир, домов, кафе, офисов, складов, школ, гостиниц и подвалов в Астане.", body, crumbs=[("Объекты", "/obekty/")], prio="0.8")
     for slug, name, gen, icon, text, pests in OBJECTS:
         url = f"/obekty/{slug}/"
-        body = f'''{ph_hero(f"Обработка {E(gen)} в Астане", E(text), [("Объекты", "/obekty/"), (name, url)], f"Здравствуйте! Нужна обработка: {name.lower()}.", ic(icon, "ic ic-xl"))}
+        body = f'''{ph_hero(f"Обработка {E(gen)} в Астане", E(text), [("Объекты", "/obekty/"), (name, url)], f"Здравствуйте! Нужна обработка: {name.lower()}.")}
 {sec("Частые вредители", pest_cards([P[x] for x in pests]))}
 {sec("Услуги", svc_cards(), alt=True)}
 {callout(f"Здравствуйте! Нужна обработка: {name.lower()}.")}
@@ -279,8 +291,8 @@ def build_districts():
         faq = [(f"Выезжаете {d['loc']}?", f"Да, работаем {d['loc']}. Время приезда согласуем при заявке."),
                (f"Сколько стоит обработка {d['loc']}?", "Стоимость зависит от вида вредителя, площади и типа объекта. Точную цену называем до выезда.")] + FAQ[2:5]
         body = f'''{ph_hero(f"Дезинсекция и дезинфекция {E(d['loc'])}", E(d["about"]), [("Районы", "/rayony/"), (d["short"], url)], f"Здравствуйте! Нужна обработка, {d['name']}.")}
-<section class="sec"><div class="wrap two"><div><h2>Где работаем</h2><ul class="chips chips-s">{spots}</ul></div><div><h2>Как проходит заявка</h2><p class="txt">Позвоните или напишите в WhatsApp, укажите адрес {d['loc']}, вид вредителя и объект. Назовём стоимость и согласуем время.</p></div></div></section>
-{sec(f"Вредители {d['loc']}", pest_cards(loc=d["loc"]), alt=True)}
+<section class="sec"><div class="wrap two"><div><h2>Где работаем</h2><ul class="bl">{spots}</ul></div><div><h2>Как проходит заявка</h2><p class="txt">Позвоните или напишите в WhatsApp, укажите адрес {d['loc']}, вид вредителя и объект. Назовём стоимость и согласуем время.</p></div></div></section>
+{sec(f"Вредители {d['loc']}", pest_cards(full=True), alt=True)}
 {sec("Услуги", svc_cards())}
 {callout(f"Здравствуйте! Нужна обработка, {d['name']}.")}
 {sec("Вопросы", faq_html(faq), alt=True)}
@@ -308,7 +320,7 @@ def build_misc():
 {sec("От чего зависит цена", factors_html())}{sec("Как мы работаем", steps_html(), alt=True)}{sec("Вопросы", faq_html(FAQ[:6]))}{lead_form("Узнать стоимость")}'''
     page("/stoimost/", f"Стоимость дезинсекции и дезинфекции в Астане — {BRAND}", "От чего зависит стоимость дезинсекции, дератизации и дезинфекции в Астане. Цену называем до выезда.", body, [faq_schema(FAQ[:6])], crumbs=[("Стоимость", "/stoimost/")], prio="0.8")
     body = f'''{ph_hero(f"О компании {BRAND}", "Санитарная служба в Астане: дезинсекция, дератизация, дезинфекция, удаление плесени и запахов.", [("О компании", "/o-kompanii/")], "Здравствуйте! Нужна обработка.")}
-<section class="sec"><div class="wrap two"><div class="prose"><h2>Чем занимаемся</h2><p>Избавляем от насекомых и грызунов, проводим дезинфекцию, убираем плесень и стойкие запахи в квартирах, частных домах и на объектах бизнеса.</p><p>Работаем по всем районам Астаны и в пригородах: Косшы, Коянды, Талапкер.</p></div><div>{svc_cards(SERVICES[:4])}</div></div></section>
+<section class="sec"><div class="wrap two"><div class="prose"><h2>Чем занимаемся</h2><p>Избавляем от насекомых и грызунов, проводим дезинфекцию, убираем плесень и стойкие запахи в квартирах, частных домах и на объектах бизнеса.</p><p>Работаем по всем районам Астаны и в пригородах: Косшы, Коянды, Талапкер.</p></div><div>{svc_cards(SERVICES[:3])}</div></div></section>
 {sec("Как мы работаем", steps_html(), alt=True)}{lead_form()}'''
     page("/o-kompanii/", f"О компании {BRAND} — санитарная служба Астаны", f"{BRAND}: дезинсекция, дератизация и дезинфекция в Астане и пригородах.", body, crumbs=[("О компании", "/o-kompanii/")], prio="0.5")
     body = f'''{ph_hero("Контакты", "Позвоните или напишите в WhatsApp — ответим на вопросы и назовём стоимость.", [("Контакты", "/kontakty/")], "Здравствуйте! Нужна обработка.")}

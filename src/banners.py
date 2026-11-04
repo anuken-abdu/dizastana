@@ -14,6 +14,7 @@ for f in OUT.glob("*"): f.unlink()
 
 BASE = """<html><head><meta charset="utf-8"><link rel="stylesheet" href="/assets/styles.css"><style>
 html,body{margin:0;background:#0d2b33}
+:root{--hex:url("data:image/svg+xml,%%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='97' viewBox='0 0 56 97'%%3E%%3Cg fill='none' stroke='%%230fa9a0' stroke-opacity='.16' stroke-width='1.2'%%3E%%3Cpath d='M28 0l28 16v32L28 64 0 48V16z'/%%3E%%3Cpath d='M28 64v33'/%%3E%%3C/g%%3E%%3C/svg%%3E")}
 .b{position:relative;overflow:hidden;width:%(w)spx;height:%(h)spx;color:#fff;font-family:"Nunito Sans";
  background:radial-gradient(%(gw)spx %(gh)spx at %(gx)s %(gy)s,rgba(25,194,181,.36),transparent 70%%),radial-gradient(%(gw)spx %(gh)spx at 0 100%%,rgba(123,104,245,.32),transparent 70%%),var(--hex-w),#0d2b33;
  background-size:auto,auto,%(hx)spx %(hy)spx,auto}
@@ -23,7 +24,7 @@ html,body{margin:0;background:#0d2b33}
 .light .cl .h{background:#fff}
 .light .cl{filter:drop-shadow(0 10px 24px rgba(13,43,51,.14))}
 .b.white{background:#fff}
-.cl .h img{width:58%%;height:58%%}
+.cl .h img{width:88%%;height:auto}
 .h0{left:36%%;top:0}.h1{left:8%%;top:16%%}.h2{left:64%%;top:16%%}.h3{left:36%%;top:33%%;width:30%%!important}.h4{left:8%%;top:50%%}.h5{left:64%%;top:50%%}.h6{left:36%%;top:67%%}
 .col{position:absolute;inset:0;display:flex;flex-direction:column;padding:%(pad)s}
 .col .cl{flex:1;min-height:0;align-self:center;margin:24px 0}
@@ -33,6 +34,7 @@ html,body{margin:0;background:#0d2b33}
 .t{font:800 %(fs)spx/1.08 "Exo 2";letter-spacing:-.01em}
 .t em{font-style:normal;color:#5ff0e2}
 .light .t em{color:#0b8a8f}
+.light .lg{color:#0d2b33}
 .s{font:600 %(ss)spx/1.35 "Nunito Sans";opacity:.85}
 .bt{display:inline-flex;align-items:center;font:700 %(bs)spx/1 "Nunito Sans";background:linear-gradient(135deg,#19c2b5,#0b8a8f);color:#fff;border-radius:999px;padding:%(bp)s}
 .lg{display:flex;align-items:center;gap:%(lgg)spx;font:800 %(lgs)spx/1 "Exo 2"}
@@ -46,24 +48,30 @@ def page(w, h, body, cls="", **k):
     d.update(k)
     return BASE % d
 
-def cloud(icons, style=""):
-    return f'<div class="cl" style="{style}">' + "".join(f'<span class="h h{i}"><img src="/assets/ic/{n}.svg"></span>' for i, n in enumerate(icons)) + "</div>"
+def cloud(pests, style=""):
+    if not pests: return '<div style="flex:1"></div>'
+    return f'<div class="cl" style="{style}">' + "".join(f'<span class="h h{i}"><img src="/assets/pests/{n}.webp"></span>' for i, n in enumerate(pests)) + "</div>"
 
-LOGO = '<div class="lg"><img src="/assets/logo-mark.svg"><span>ТазаДез<small>санитарная служба Астаны</small></span></div>'
-ALL = ["cockroach", "bedbug", "flea", "ant", "moth", "woodlouse", "rat"]
-SETS = {"obshchiy": ALL, "klopy": ["bedbug", "flea", "moth", "bedbug", "mite", "cockroach", "woodlouse"],
-        "tarakany": ["cockroach", "ant", "silverfish", "cockroach", "woodlouse", "fly", "bedbug"],
-        "gryzuny": ["mouse", "rat", "basement", "rat", "warehouse", "mouse", "house"],
-        "plesen": ["mold", "microbe", "odor", "ozone", "flat", "mold", "microbe"],
-        "biznes": ["cafe", "warehouse", "office", "biz", "factory", "hotel", "cart"]}
+LOGO = '<div class="lg"><img src="/assets/logo-mark.svg"><span>Diz<i style="font-style:normal;color:#5ff0e2">Astana</i></span></div>'
+LOGO_L = LOGO.replace("#5ff0e2", "#0b8a8f")
+ALL = ["tarakany", "klopy", "muravi", "osy", "blohi", "kleshchi", "mol"]
+SETS = {"obshchiy": ALL, "klopy": ["klopy", "blohi", "vshi", "klopy", "mol", "tarakany", "shchitniki"],
+        "tarakany": ["tarakany", "muravi", "mokricy", "tarakany", "pauki", "muhi", "klopy"],
+        "leto": ["kleshchi", "komary", "osy", "muhi", "pauki", "shchitniki", "kleshchi"],
+        "gryzuny": [], "plesen": [], "biznes": []}
 TEXT = [("obshchiy", "Дезинсекция и&nbsp;дезинфекция <em>в&nbsp;Астане</em>", "Квартиры, дома, кафе, офисы и склады"),
-        ("klopy", "Уничтожение <em>клопов</em> в&nbsp;Астане", "Спальные места, мебель, щели и плинтусы"),
+        ("klopy", "Уничтожение <em>клопов</em> в&nbsp;Астане", "Матрасы, мебель и плинтусы"),
         ("tarakany", "Избавим от <em>тараканов</em>", "Кухня, санузел, щели и места у труб"),
+        ("leto", "Клещи, комары, <em>осы</em>", "Обработка участков, дач и домов"),
         ("gryzuny", "Уничтожение <em>крыс и&nbsp;мышей</em>", "Частные дома, подвалы, склады"),
         ("plesen", "Удаление <em>плесени и&nbsp;запахов</em>", "Обработка от грибка, озонирование"),
         ("biznes", "Санобработка <em>для&nbsp;бизнеса</em>", "Кафе, магазины, склады, офисы")]
 
 def text_banner(w, h, slug, title, sub):
+    if not SETS[slug]:
+        fs, ss = (64, 28) if w / h > 1.5 else ((96, 38) if w == h else (88, 36))
+        return page(w, h, f'<div class="col" style="justify-content:space-between">{LOGO}<div><div class="t">{title}</div><div class="s" style="margin-top:22px">{sub}</div></div>'
+                    '<div><span class="bt">Узнать стоимость</span></div></div>', fs=fs, ss=ss, bs=26 if w / h > 1.5 else 30, gy="80%", gx="80%", pad="56px 64px" if w / h > 1.5 else "70px 72px")
     if w / h > 1.5:
         return page(w, h, f'<div class="row"><div>{LOGO}<div class="t">{title}</div><div class="s">{sub}</div><div class="bt">Узнать стоимость</div></div>{cloud(SETS[slug])}</div>',
                     fs=62, ss=27, bs=24, bp="18px 28px", lgs=30, lgi=62, lgss=14, pad="44px 56px", clh=540)
@@ -78,29 +86,31 @@ def plain_banner(w, h, slug, light=False):
 
 def mailing(title, sub, slug):
     """Для рассылки в мессенджерах: крупный текст, без контактов."""
+    if not SETS[slug]:
+        return page(1080, 1080, f'<div class="col" style="justify-content:center"><div class="t">{title}</div><div class="s" style="margin-top:30px">{sub}</div></div>', fs=118, ss=48, gy="80%", pad="80px 80px")
     return page(1080, 1080, f'<div class="col"><div class="t">{title}</div>' + (f'<div class="s" style="margin-top:26px">{sub}</div>' if sub else "")
                 + cloud(SETS[slug]) + "</div>", fs=104, ss=44, gy="74%", pad="80px 76px 70px")
 
 def logo_png(w, h):
     if w == h:
         return page(w, h, '<img src="/assets/favicon.svg" style="position:absolute;left:10%;top:10%;width:80%;height:80%">', "light white")
-    return page(w, h, f'<div style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);white-space:nowrap">{LOGO}</div>', "light white", lgs=78, lgss=30, lgi=170, lgg=32)
+    return page(w, h, f'<div style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);white-space:nowrap">{LOGO_L}</div>', "light white", lgs=96, lgss=30, lgi=160, lgg=30)
 
 def og():
     return page(1200, 630, f'<div class="row"><div>{LOGO}<div class="t">Дезинсекция, дератизация и&nbsp;дезинфекция <em>в&nbsp;Астане</em></div>'
-                '<div class="s">Тараканы, клопы, грызуны, плесень и запахи · все районы и пригороды</div></div>' + cloud(ALL) + "</div>",
+                '<div class="s">Насекомые, грызуны, плесень и запахи</div></div>' + cloud(ALL) + "</div>",
                 fs=54, ss=24, lgs=30, lgi=60, lgss=14, pad="50px 60px", clh=540)
 
 JOBS = [("_og.png", 1200, 630, og())]
 for w, h in [(1200, 628), (1200, 1200), (960, 1200)]:
     for slug, t, s in TEXT: JOBS.append((f"s-tekstom-{slug}-{w}x{h}.jpg", w, h, text_banner(w, h, slug, t, s)))
-    for slug in ["obshchiy", "klopy", "gryzuny", "plesen"]:
+    for slug in ["obshchiy", "klopy", "tarakany", "leto"]:
         JOBS.append((f"bez-teksta-{slug}-tyomnyy-{w}x{h}.jpg", w, h, plain_banner(w, h, slug)))
         JOBS.append((f"bez-teksta-{slug}-svetlyy-{w}x{h}.jpg", w, h, plain_banner(w, h, slug, True)))
-for i, (t, s, slug) in enumerate([("Тараканы, клопы, грызуны? <em>Решим</em>", "Санитарная обработка в Астане", "obshchiy"),
+for i, (t, s, slug) in enumerate([("Насекомые в&nbsp;доме? <em>Уберём</em>", "Санитарная обработка в Астане", "obshchiy"),
                                   ("Клопы <em>не&nbsp;уйдут</em> сами", "Обработка квартир и домов в Астане", "klopy"),
-                                  ("Плесень и&nbsp;запах <em>— уберём</em>", "Обработка от грибка и озонирование", "plesen"),
-                                  ("Санобработка <em>для&nbsp;бизнеса</em>", "Кафе, магазины, склады в Астане", "biznes")], 1):
+                                  ("Клещи и&nbsp;комары <em>на&nbsp;участке?</em>", "Обработка дач и частных домов", "leto"),
+                                  ("Плесень и&nbsp;запах <em>— уберём</em>", "Обработка от грибка и озонирование", "plesen")], 1):
     JOBS.append((f"rassylka-{i}-1080x1080.jpg", 1080, 1080, mailing(t, s, slug)))
 JOBS += [("logo-1200x1200.png", 1200, 1200, logo_png(1200, 1200)), ("logo-1200x300.png", 1200, 300, logo_png(1200, 300))]
 
