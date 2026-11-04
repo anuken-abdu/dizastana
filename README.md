@@ -5,9 +5,9 @@
 ## Сборка
 ```
 python3 src/gen_chat.py      # ИИ-чат: api/chat.js из данных сайта
-python3 src/build.py         # сайт → dist/ (62 страницы, sitemap, robots, llms.txt)
-python3 src/banners.py       # баннеры → google-ads/banners/ и assets/og.png (после — снова build.py)
-python3 src/ads.py src/templates/Create_New_Campaigns.xlsx   # Google Ads → google-ads/
+python3 src/build.py         # сайт → dist/ (66 страниц, sitemap, robots, llms.txt)
+python3 src/banners.py       # OG-картинка assets/og.png (после — снова build.py)
+python3 src/ads_editor.py    # Google Ads Editor → google-ads/*.csv
 ```
 Все тексты, вредители, услуги, районы и FAQ — в `src/data.py`. Сменили домен — правьте `SITE_URL` там же и пересоберите.
 
@@ -24,3 +24,9 @@ python3 src/ads.py src/templates/Create_New_Campaigns.xlsx   # Google Ads → go
 
 ## Фото вредителей
 Лежат в `assets/pests/` (webp, 960×720 и 480×360, без EXIF). Новое фото: положите исходник, обрежьте под 4:3 на белом фоне, назовите по slug вредителя из `data.py` и пропишите `photo="slug"`.
+
+## Фото услуг
+Положите `assets/services/<slug-услуги>.webp` (4:3, например 960×720) — фото само встанет в карточку и шапку страницы услуги. Без файла показывается фото вредителя или тёмная плитка с линейной иконкой.
+
+## Google Ads Editor
+Аккаунт → Импорт → Из файла: сначала `1-kampaniya-editor.csv`, затем `2-rasshireniya-editor.csv` → Обработать → Сохранить → Опубликовать.
