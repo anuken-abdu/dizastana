@@ -10,7 +10,7 @@ PHONE_TEL = "+77476598230"
 WA_NUMBER = "77476598230"
 CITY = "Астана"; CITY_IN = "в Астане"; CITY_GEN = "Астаны"
 TAG_ID = "GTM-PZFRPBVQ"   # единый тег Google (контейнер «Все теги»), ставится один раз сразу после <head>
-GA_ID = ""; GADS_ID = "AW-18556636193"; GADS_CALL_LABEL = ""; GADS_WA_LABEL = ""
+GA_ID = ""; GADS_ID = "AW-18556636193"; GADS_CALL_LABEL = "CPy9CNnWpbIdEKGYv5BF"; GADS_WA_LABEL = ""
 DEV = ("Anuken", "https://wa.me/77074534518")
 
 # ---------------------------------------------------------------- районы Астаны и пригороды
