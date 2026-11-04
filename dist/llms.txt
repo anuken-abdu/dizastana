@@ -1,61 +1,66 @@
-# ТазаДез — санитарная служба Астаны
+# DizAstana — санитарная служба Астаны
 
 > Дезинсекция, дератизация, дезинфекция, обработка от плесени, озонирование и удаление запахов в Астане и пригородах (Косшы, Коянды, Талапкер).
 
 - Телефон и WhatsApp: +7 747 659 82 30
-- Сайт: https://www.tazadez.kz/
+- Сайт: https://www.diz-astana.kz/
 - Стоимость называется до выезда и зависит от вида вредителя, площади, объекта и степени заражения.
 
 ## Вредители
-- Тараканы: https://www.tazadez.kz/vrediteli/tarakany/
-- Клопы: https://www.tazadez.kz/vrediteli/klopy/
-- Блохи: https://www.tazadez.kz/vrediteli/blohi/
-- Муравьи: https://www.tazadez.kz/vrediteli/muravi/
-- Моль: https://www.tazadez.kz/vrediteli/mol/
-- Мокрицы: https://www.tazadez.kz/vrediteli/mokricy/
-- Чешуйницы: https://www.tazadez.kz/vrediteli/cheshuynicy/
-- Осы и шершни: https://www.tazadez.kz/vrediteli/osy/
-- Клещи на участке: https://www.tazadez.kz/vrediteli/kleshchi/
-- Пылевые клещи: https://www.tazadez.kz/vrediteli/pylevye-kleshchi/
-- Крысы: https://www.tazadez.kz/vrediteli/krysy/
-- Мыши: https://www.tazadez.kz/vrediteli/myshi/
-- Мухи и комары: https://www.tazadez.kz/vrediteli/muhi/
+- Тараканы: https://www.diz-astana.kz/vrediteli/tarakany/
+- Клопы: https://www.diz-astana.kz/vrediteli/klopy/
+- Блохи: https://www.diz-astana.kz/vrediteli/blohi/
+- Муравьи: https://www.diz-astana.kz/vrediteli/muravi/
+- Моль: https://www.diz-astana.kz/vrediteli/mol/
+- Мухи: https://www.diz-astana.kz/vrediteli/muhi/
+- Комары: https://www.diz-astana.kz/vrediteli/komary/
+- Пауки: https://www.diz-astana.kz/vrediteli/pauki/
+- Осы и пчёлы: https://www.diz-astana.kz/vrediteli/osy/
+- Клещи: https://www.diz-astana.kz/vrediteli/kleshchi/
+- Мокрицы: https://www.diz-astana.kz/vrediteli/mokricy/
+- Вши: https://www.diz-astana.kz/vrediteli/vshi/
+- Древоточцы: https://www.diz-astana.kz/vrediteli/drevotochcy/
+- Клопы-щитники: https://www.diz-astana.kz/vrediteli/shchitniki/
+- Крысы: https://www.diz-astana.kz/vrediteli/krysy/
+- Мыши: https://www.diz-astana.kz/vrediteli/myshi/
+- Чешуйницы: https://www.diz-astana.kz/vrediteli/cheshuynicy/
+- Пылевые клещи: https://www.diz-astana.kz/vrediteli/pylevye-kleshchi/
 
 ## Услуги
-- Дезинсекция — уничтожение насекомых: https://www.tazadez.kz/uslugi/dezinsekciya/
-- Дератизация — уничтожение крыс и мышей: https://www.tazadez.kz/uslugi/deratizaciya/
-- Дезинфекция — вирусы, бактерии, грибок: https://www.tazadez.kz/uslugi/dezinfekciya/
-- Обработка после умершего — дезинфекция и удаление запаха: https://www.tazadez.kz/uslugi/dezinfekciya-posle-umershego/
-- Обработка от плесени — грибок на стенах и в углах: https://www.tazadez.kz/uslugi/ot-pleseni-i-griba/
-- Озонирование — удаление запахов и обеззараживание: https://www.tazadez.kz/uslugi/ozonirovanie/
-- Удаление запахов — дезодорация помещений: https://www.tazadez.kz/uslugi/dezodoraciya/
-- Обработка от клещей — участки, дачи, территории: https://www.tazadez.kz/uslugi/akaricidnaya-obrabotka/
-- Для бизнеса — кафе, магазины, склады, офисы: https://www.tazadez.kz/uslugi/dlya-biznesa/
+- Дезинсекция — уничтожение насекомых: https://www.diz-astana.kz/uslugi/dezinsekciya/
+- Дератизация — крысы и мыши: https://www.diz-astana.kz/uslugi/deratizaciya/
+- Дезинфекция — вирусы и бактерии: https://www.diz-astana.kz/uslugi/dezinfekciya/
+- Обработка после умершего — дезинфекция и удаление запаха: https://www.diz-astana.kz/uslugi/dezinfekciya-posle-umershego/
+- Обработка от плесени — грибок на стенах и в углах: https://www.diz-astana.kz/uslugi/ot-pleseni-i-griba/
+- Озонирование — запахи и обеззараживание: https://www.diz-astana.kz/uslugi/ozonirovanie/
+- Удаление запахов — дезодорация помещений: https://www.diz-astana.kz/uslugi/dezodoraciya/
+- Обработка от клещей — участки, дачи, территории: https://www.diz-astana.kz/uslugi/akaricidnaya-obrabotka/
+- Для бизнеса — кафе, магазины, склады, офисы: https://www.diz-astana.kz/uslugi/dlya-biznesa/
 
 ## Объекты
-- Квартиры: https://www.tazadez.kz/obekty/kvartiry/
-- Частные дома и дачи: https://www.tazadez.kz/obekty/chastnye-doma/
-- Офисы: https://www.tazadez.kz/obekty/ofisy/
-- Кафе и рестораны: https://www.tazadez.kz/obekty/kafe-restorany/
-- Магазины: https://www.tazadez.kz/obekty/magaziny/
-- Склады: https://www.tazadez.kz/obekty/sklady/
-- Производства: https://www.tazadez.kz/obekty/proizvodstva/
-- Детские сады и школы: https://www.tazadez.kz/obekty/detskie-sady-shkoly/
-- Медицинские учреждения: https://www.tazadez.kz/obekty/medicinskie-uchrezhdeniya/
-- Гостиницы и хостелы: https://www.tazadez.kz/obekty/gostinicy-hostely/
-- Общежития: https://www.tazadez.kz/obekty/obshchezhitiya/
-- Подвалы, КСК и ОСИ: https://www.tazadez.kz/obekty/podvaly-ksk-osi/
+- Квартиры: https://www.diz-astana.kz/obekty/kvartiry/
+- Частные дома: https://www.diz-astana.kz/obekty/chastnye-doma/
+- Офисы: https://www.diz-astana.kz/obekty/ofisy/
+- Кафе и рестораны: https://www.diz-astana.kz/obekty/kafe-restorany/
+- Магазины: https://www.diz-astana.kz/obekty/magaziny/
+- Склады: https://www.diz-astana.kz/obekty/sklady/
+- Производства: https://www.diz-astana.kz/obekty/proizvodstva/
+- Сады и школы: https://www.diz-astana.kz/obekty/detskie-sady-shkoly/
+- Клиники: https://www.diz-astana.kz/obekty/medicinskie-uchrezhdeniya/
+- Гостиницы: https://www.diz-astana.kz/obekty/gostinicy-hostely/
+- Общежития: https://www.diz-astana.kz/obekty/obshchezhitiya/
+- Подвалы и ОСИ: https://www.diz-astana.kz/obekty/podvaly-ksk-osi/
 
 ## Районы
-- район Алматы: https://www.tazadez.kz/rayony/almaty/
-- район Байконыр: https://www.tazadez.kz/rayony/baykonyr/
-- район Есиль: https://www.tazadez.kz/rayony/esil/
-- район Нура: https://www.tazadez.kz/rayony/nura/
-- район Сарыарка: https://www.tazadez.kz/rayony/saryarka/
-- район Сарайшык: https://www.tazadez.kz/rayony/sarayshyk/
-- город Косшы: https://www.tazadez.kz/rayony/kosshy/
-- село Коянды: https://www.tazadez.kz/rayony/koyandy/
-- село Талапкер: https://www.tazadez.kz/rayony/talapker/
+- район Алматы: https://www.diz-astana.kz/rayony/almaty/
+- район Байконыр: https://www.diz-astana.kz/rayony/baykonyr/
+- район Есиль: https://www.diz-astana.kz/rayony/esil/
+- район Нура: https://www.diz-astana.kz/rayony/nura/
+- район Сарыарка: https://www.diz-astana.kz/rayony/saryarka/
+- район Сарайшык: https://www.diz-astana.kz/rayony/sarayshyk/
+- город Косшы: https://www.diz-astana.kz/rayony/kosshy/
+- село Коянды: https://www.diz-astana.kz/rayony/koyandy/
+- село Талапкер: https://www.diz-astana.kz/rayony/talapker/
 
 ## Частые вопросы
 - Сколько стоит обработка? Стоимость зависит от вида вредителя, площади, типа объекта и степени заражения. Точную цену называем до выезда — позвоните или напишите в WhatsApp.
@@ -68,7 +73,7 @@
 - Можно ли провести обработку в выходные или вечером? Время обработки согласуем при заявке — для бизнеса подбираем время, когда объект не работает.
 
 ## Статьи
-- Как подготовить квартиру к обработке: https://www.tazadez.kz/stati/kak-podgotovit-kvartiru-k-obrabotke/
-- Клопы в квартире: что делать: https://www.tazadez.kz/stati/klopy-v-kvartire-chto-delat/
-- Плесень в квартире: причины и что делать: https://www.tazadez.kz/stati/plesen-v-kvartire/
-- Крысы и мыши в частном доме: https://www.tazadez.kz/stati/krysy-v-chastnom-dome/
+- Как подготовить квартиру к обработке: https://www.diz-astana.kz/stati/kak-podgotovit-kvartiru-k-obrabotke/
+- Клопы в квартире: что делать: https://www.diz-astana.kz/stati/klopy-v-kvartire-chto-delat/
+- Плесень в квартире: причины и что делать: https://www.diz-astana.kz/stati/plesen-v-kvartire/
+- Крысы и мыши в частном доме: https://www.diz-astana.kz/stati/krysy-v-chastnom-dome/
