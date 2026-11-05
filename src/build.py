@@ -8,7 +8,7 @@ from data import *
 
 ROOT = Path(__file__).resolve().parent.parent
 DIST = ROOT / "dist"
-VER = "0511262300"
+VER = "0511270330"
 TODAY = date.today().isoformat()
 E = lambda s: html.escape(str(s), quote=True)
 PAGES = []
@@ -53,8 +53,8 @@ def crumbs_html(cr):
     return f'<nav class="crumbs" aria-label="Навигация"><ol>{li}</ol></nav>'
 
 def ph_hero(h1, lead, crumbs, msg, art=""):
-    side = f'<div class="phd-art">{art}</div>' if art else ""
-    return f'<section class="phd"><div class="wrap">{crumbs_html(crumbs)}<div class="phd-in{" has-art" if art else ""}"><div><h1>{h1}</h1><p class="lead-t">{lead}</p>{btns(msg, True)}</div>{side}</div></div></section>'
+    side = f'<div class="phd-art{" phd-art-b" if " sb" in art else ""}">{art}</div>' if art else ""
+    return f'<section class="phd"><div class="wrap">{crumbs_html(crumbs)}<div class="phd-in{" has-art" if art else ""}{" has-bn" if " sb" in art else ""}"><div><h1>{h1}</h1><p class="lead-t">{lead}</p>{btns(msg, True)}</div>{side}</div></div></section>'
 
 # ---------------------------------------------------------------- блоки
 def pest_cards(items=None, full=False):
@@ -71,7 +71,9 @@ def pest_cards(items=None, full=False):
 def svc_media(s, cls="sc-m", big=False):
     f = ROOT / "assets" / "services" / f"{s['slug']}.webp"
     if f.exists():
-        return f'<img class="{cls}" src="/assets/services/{s["slug"]}.webp?v={VER}" alt="{E(s["name"])}" width="960" height="720" loading="lazy" decoding="async">'
+        src = f"/assets/services/{s['slug']}{'' if big else '-s'}.webp?v={VER}"
+        w, h = (1280, 720) if big else (640, 360)
+        return f'<img class="{cls} sb" src="{src}" alt="{E(s["name"])}" width="{w}" height="{h}"{"" if big else " loading=" + chr(34) + "lazy" + chr(34)} decoding="async">'
     if SERVICE_PHOTO.get(s["slug"]):
         return photo(P[SERVICE_PHOTO[s["slug"]]], cls, big=big)
     return f'<span class="{cls} sc-ph">{ph("s-" + s["slug"])}</span>'
@@ -196,7 +198,7 @@ def page(path, title, desc, body, schemas=(), crumbs=None, prio="0.7"):
 <meta property="og:title" content="{E(title)}"><meta property="og:description" content="{E(desc)}"><meta property="og:url" content="{SITE_URL}{path}">
 <meta property="og:image" content="{SITE_URL}/assets/og.png"><meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#06183f">
-<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml"><link rel="icon" href="/favicon.png" type="image/png"><link rel="apple-touch-icon" href="/assets/apple-touch-icon.png"><link rel="manifest" href="/site.webmanifest">
+<link rel="icon" href="/favicon.ico" sizes="48x48"><link rel="icon" href="/assets/favicon-32.png" sizes="32x32" type="image/png"><link rel="icon" href="/assets/favicon-16.png" sizes="16x16" type="image/png"><link rel="apple-touch-icon" href="/assets/apple-touch-icon.png"><link rel="manifest" href="/site.webmanifest">
 <link rel="preload" href="/assets/fonts/nunito-sans-cyrillic-400-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/assets/fonts/exo-2-cyrillic-800-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/assets/styles.css?v={VER}">
