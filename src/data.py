@@ -10,7 +10,9 @@ PHONE_TEL = "+77476598230"
 WA_NUMBER = "77476598230"
 CITY = "Астана"; CITY_IN = "в Астане"; CITY_GEN = "Астаны"
 TAG_ID = "GTM-MPWRLKNP"   # единый тег Google (контейнер «Все теги»), ставится один раз сразу после <head>
-GA_ID = ""; GADS_ID = ""; GADS_CALL_LABEL = ""; GADS_WA_LABEL = ""   # старые теги убраны; конверсию нового аккаунта впишите сюда
+GA_ID = ""
+GADS_ID = "AW-18198097775"                                           # аккаунт Google Ads, где идёт реклама DizAstana
+GADS_CALL_LABEL = GADS_WA_LABEL = "LCcoCPvjvrodEO_ew-VD"              # конверсия «Интерактивные номера телефонов» (звонок и WhatsApp)
 DEV = ("Anuken", "https://wa.me/77074534518")
 
 # ---------------------------------------------------------------- районы Астаны и пригороды

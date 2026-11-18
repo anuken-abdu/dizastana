@@ -7,15 +7,14 @@
   function waUrl(t) { return "https://wa.me/" + CFG.wan + "?text=" + encodeURIComponent(t); }
 
   /* ---------- конверсии Google Ads / GA4 ---------- */
+  /* ссылки из HTML уже вызывают gtag_report_conversion через onclick; здесь — ссылки, которые создаёт скрипт (чат) */
   function conv(kind) {
-    if (typeof window.gtag !== "function") return;
-    var label = kind === "call" ? CFG.call : CFG.wa;
-    if (CFG.ads && label) window.gtag("event", "conversion", { send_to: CFG.ads + "/" + label, value: 1.0, currency: "USD", transport_type: "beacon" });
-    if (CFG.ga) window.gtag("event", kind === "call" ? "phone_click" : "whatsapp_click", { page_path: location.pathname, transport_type: "beacon" });
+    if (typeof window.gtag_report_conversion === "function") window.gtag_report_conversion();
+    if (CFG.ga && typeof window.gtag === "function") window.gtag("event", kind === "call" ? "phone_click" : "whatsapp_click", { page_path: location.pathname, transport_type: "beacon" });
   }
   document.addEventListener("click", function (e) {
     var a = e.target.closest("a");
-    if (!a) return;
+    if (!a || a.hasAttribute("onclick")) return;
     var h = a.getAttribute("href") || "";
     if (h.indexOf("tel:") === 0) conv("call");
     else if (h.indexOf("wa.me") > -1) conv("wa");

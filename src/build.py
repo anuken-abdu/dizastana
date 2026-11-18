@@ -8,7 +8,7 @@ from data import *
 
 ROOT = Path(__file__).resolve().parent.parent
 DIST = ROOT / "dist"
-VER = "0511270330"
+VER = "1811260320"
 TODAY = date.today().isoformat()
 E = lambda s: html.escape(str(s), quote=True)
 PAGES = []
@@ -171,10 +171,28 @@ def nav_html():
 <div class="nav-m">{btns("Здравствуйте! Нужна обработка в Астане.", True)}</div></nav>'''
 
 def gtag():
-    """Единый тег Google — ровно как выдаёт Google («Вручную»), сразу после <head>. Второй тег не добавляем."""
-    if not TAG_ID: return ""
-    return (f'<script async src="https://www.googletagmanager.com/gtm.js?id={TAG_ID}"></script>\n'
-            '<script>\n  window.dataLayer = window.dataLayer || [];\n  function gtag(){dataLayer.push(arguments);}\n  gtag(\'js\', new Date());\n</script>\n')
+    """Тег Google в форме gtag.js (как в Google Рекламе), сразу после <meta charset>. Вторая строка config — аккаунт Google Ads,
+    чтобы конверсия AW-… точно доходила, даже если единый тег создан в другом аккаунте."""
+    if not TAG_ID and not GADS_ID: return ""
+    main = TAG_ID or GADS_ID
+    cfg = f"  gtag('config', '{main}');\n" + (f"  gtag('config', '{GADS_ID}');\n" if GADS_ID and GADS_ID != main else "") + (f"  gtag('config', '{GA_ID}');\n" if GA_ID else "")
+    tag = ("<!-- Google tag (gtag.js) -->\n"
+           f'<script async src="https://www.googletagmanager.com/gtag/js?id={main}"></script>\n'
+           "<script>\n  window.dataLayer = window.dataLayer || [];\n  function gtag(){dataLayer.push(arguments);}\n  gtag('js', new Date());\n\n" + cfg + "</script>\n")
+    if GADS_ID and GADS_CALL_LABEL:
+        # событие конверсии «Интерактивные номера телефонов» — код Google + защита: звонок откроется не позже чем через 0,8 с
+        tag += ("<!-- Event snippet for Интерактивные номера телефонов conversion page -->\n<script>\n"
+                "  function gtag_report_conversion(url) {\n    var done = false;\n"
+                "    var callback = function () { if (done) return; done = true; if (typeof(url) != 'undefined') { window.location = url; } };\n"
+                f"    if (typeof gtag === 'function') {{ gtag('event', 'conversion', {{ 'send_to': '{GADS_ID}/{GADS_CALL_LABEL}', 'value': 1.0, 'currency': 'USD', 'transport_type': 'beacon', 'event_callback': callback }}); }}\n"
+                "    setTimeout(callback, 800);\n    return false;\n  }\n</script>\n")
+    return tag
+
+def conv_links(doc):
+    """onclick на всех ссылках звонка и WhatsApp — как требует Google."""
+    if not (GADS_ID and GADS_CALL_LABEL): return doc
+    doc = re.sub(r'<a ((?:(?!onclick)[^>])*?)href="tel:([^"]+)"', lambda m: f'<a {m.group(1)}href="tel:{m.group(2)}" onclick="return gtag_report_conversion(&#39;tel:{m.group(2)}&#39;)"', doc)
+    return re.sub(r'<a ((?:(?!onclick)[^>])*?)href="(https://wa\.me/[^"]+)"', lambda m: f'<a {m.group(1)}href="{m.group(2)}" onclick="gtag_report_conversion()"', doc)
 
 def page(path, title, desc, body, schemas=(), crumbs=None, prio="0.7"):
     PAGES.append((path, prio))
@@ -187,7 +205,8 @@ def page(path, title, desc, body, schemas=(), crumbs=None, prio="0.7"):
     doc = f'''<!doctype html>
 <html lang="ru">
 <head>
-{gtag()}<meta charset="utf-8">
+<meta charset="utf-8">
+{gtag()}
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>{E(title)}</title>
 <meta name="description" content="{E(desc)}">
@@ -230,7 +249,7 @@ def page(path, title, desc, body, schemas=(), crumbs=None, prio="0.7"):
 <script src="/assets/app.js?v={VER}" defer></script>
 </body></html>'''
     out = DIST / "404.html" if path == "/404" else DIST / path.strip("/") / "index.html"
-    out.parent.mkdir(parents=True, exist_ok=True); out.write_text(doc, encoding="utf-8")
+    out.parent.mkdir(parents=True, exist_ok=True); out.write_text(conv_links(doc), encoding="utf-8")
 
 # ---------------------------------------------------------------- страницы
 def build_home():
